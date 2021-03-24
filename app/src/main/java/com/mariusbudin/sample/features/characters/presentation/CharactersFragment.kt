@@ -4,18 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mariusbudin.sample.R
-import com.mariusbudin.sample.core.platform.Resource
 import com.mariusbudin.sample.core.platform.autoCleared
 import com.mariusbudin.sample.databinding.CharactersFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
 
+@ExperimentalPagingApi
 @AndroidEntryPoint
 class CharactersFragment : Fragment() {
 
@@ -44,19 +44,10 @@ class CharactersFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.characters.observe(viewLifecycleOwner, {
-            when (it.status) {
-                Resource.Status.SUCCESS -> {
-                    binding.progress.visibility = View.GONE
-                    if (!it.data.isNullOrEmpty()) adapter.submitList(it.data)
-                }
-                Resource.Status.ERROR ->
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
-
-                Resource.Status.LOADING ->
-                    binding.progress.visibility = View.VISIBLE
-            }
-        })
+        viewModel.characters.observe(viewLifecycleOwner) { chars ->
+            binding.progress.visibility = View.GONE
+            adapter.submitData(lifecycle, chars)
+        }
     }
 
     private fun navigateToDetails(id: Int) {

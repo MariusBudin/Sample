@@ -7,6 +7,6 @@ class CharactersRemoteDataSource @Inject constructor(
     private val service: CharactersService
 ) : BaseDataSource() {
 
-    suspend fun getCharacters() = getResult { service.getCharacters() }
+    suspend fun getCharacters(page: Int) = getResult { service.getCharacters(page) }
     suspend fun getCharacter(id: Int) = getResult { service.getCharacter(id) }
 }

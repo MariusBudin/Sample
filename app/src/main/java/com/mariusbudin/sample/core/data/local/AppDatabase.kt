@@ -5,12 +5,19 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.mariusbudin.sample.features.characters.data.local.CharacterDao
+import com.mariusbudin.sample.features.characters.data.local.RemoteKeyDao
 import com.mariusbudin.sample.features.characters.data.model.Character
+import com.mariusbudin.sample.features.characters.data.model.RemoteKey
 
-@Database(entities = [Character::class], version = 1, exportSchema = false)
+@Database(
+    entities = [Character::class, RemoteKey::class],
+    version = 1,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun characterDao(): CharacterDao
+    abstract fun remoteKeyDao(): RemoteKeyDao
 
     companion object {
 

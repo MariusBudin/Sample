@@ -6,7 +6,7 @@ import com.mariusbudin.sample.core.data.local.AppDatabase
 import com.mariusbudin.sample.features.characters.data.local.CharacterDao
 import com.mariusbudin.sample.features.characters.data.remote.CharactersRemoteDataSource
 import com.mariusbudin.sample.features.characters.data.remote.CharactersService
-import com.mariusbudin.sample.features.characters.data.repository.CharactersRepository
+import com.mariusbudin.sample.features.characters.data.CharactersRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -58,14 +58,9 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideCharacterDao(db: AppDatabase) = db.characterDao()
-
-    @Singleton
-    @Provides
     fun provideCharacterRepository(
         remoteDataSource: CharactersRemoteDataSource,
-        localDataSource: CharacterDao
-    ) = CharactersRepository(remoteDataSource, localDataSource)
-
+        db: AppDatabase
+    ) = CharactersRepository(remoteDataSource, db)
 
 }

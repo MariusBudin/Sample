@@ -4,16 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.paging.ExperimentalPagingApi
 import com.mariusbudin.sample.core.extension.loadCircle
-import com.mariusbudin.sample.core.platform.Resource
 import com.mariusbudin.sample.core.platform.autoCleared
 import com.mariusbudin.sample.databinding.CharacterDetailsFragmentBinding
 import com.mariusbudin.sample.features.characters.presentation.CharactersFragment.Companion.PARAM_ID
 import dagger.hilt.android.AndroidEntryPoint
 
+@ExperimentalPagingApi
 @AndroidEntryPoint
 class CharacterDetailsFragment : Fragment() {
 
@@ -37,20 +37,11 @@ class CharacterDetailsFragment : Fragment() {
     private fun setupObservers() {
         viewModel.character.observe(viewLifecycleOwner, {
 
-            when (it.status) {
-                Resource.Status.SUCCESS -> {
-                    binding.progress.visibility = View.GONE
-                    it.data?.let { character ->
-                        binding.title.text = character.name
-                        binding.status.text = character.status
-                        binding.image.loadCircle(character.image)
-                    }
-                }
-                Resource.Status.ERROR ->
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
-
-                Resource.Status.LOADING ->
-                    binding.progress.visibility = View.VISIBLE
+            binding.progress.visibility = View.GONE
+            it?.let { character ->
+                binding.title.text = character.name
+                binding.status.text = character.status
+                binding.image.loadCircle(character.image)
             }
         })
     }

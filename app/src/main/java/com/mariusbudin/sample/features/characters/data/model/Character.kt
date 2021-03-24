@@ -26,12 +26,7 @@ data class Character(
                 }
 
                 override fun areContentsTheSame(oldItem: Character, newItem: Character): Boolean {
-                    return oldItem.id == newItem.id
-                            && oldItem.name == newItem.name
-                            && oldItem.status == newItem.status
-                            && oldItem.species == newItem.species
-                            && oldItem.image == newItem.image
-                            && oldItem.location == newItem.location
+                    return oldItem == newItem
                 }
             }
 

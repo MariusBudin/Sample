@@ -1,6 +1,7 @@
 package com.mariusbudin.sample.features.characters.data.local
 
 import androidx.lifecycle.LiveData
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -11,7 +12,7 @@ import com.mariusbudin.sample.features.characters.data.model.Character
 interface CharacterDao {
 
     @Query("SELECT * FROM characters")
-    fun getCharacters(): LiveData<List<Character>>
+    fun getCharacters(): PagingSource<Int, Character>
 
     @Query("SELECT * FROM characters WHERE id = :id")
     fun getCharacter(id: Int): LiveData<Character>
@@ -22,5 +23,6 @@ interface CharacterDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(character: Character)
 
-
+    @Query("DELETE FROM characters")
+    suspend fun deleteAll()
 }

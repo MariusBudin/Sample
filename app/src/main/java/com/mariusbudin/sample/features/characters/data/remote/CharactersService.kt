@@ -5,10 +5,11 @@ import com.mariusbudin.sample.features.characters.data.model.remote.CharactersLi
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface CharactersService {
     @GET("character")
-    suspend fun getCharacters(): Response<CharactersListRemoteModel>
+    suspend fun getCharacters(@Query("page") page: Int = 1): Response<CharactersListRemoteModel>
 
     @GET("character/{id}")
     suspend fun getCharacter(@Path("id") id: Int): Response<CharacterRemoteModel>
