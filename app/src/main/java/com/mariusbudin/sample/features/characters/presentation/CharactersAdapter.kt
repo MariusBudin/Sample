@@ -28,10 +28,10 @@ class CharactersAdapter(
             item: Character?,
             onSelect: (id: Int) -> Unit
         ) {
-            item?.let {
-                binding.title.text = it.name
-                binding.image.load(it.image)
-                itemView.setOnClickListener { onSelect(it.id) }
+            item?.let { character ->
+                binding.title.text = character.name
+                binding.image.load(character.image)
+                itemView.setOnClickListener { onSelect(character.id) }
             }
         }
     }

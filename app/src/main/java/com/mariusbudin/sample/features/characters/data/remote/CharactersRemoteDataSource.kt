@@ -1,12 +1,12 @@
 package com.mariusbudin.sample.features.characters.data.remote
 
-import com.mariusbudin.sample.core.data.remote.BaseDataSource
+import com.mariusbudin.sample.features.characters.data.model.remote.CharactersListRemoteModel
 import javax.inject.Inject
 
 class CharactersRemoteDataSource @Inject constructor(
     private val service: CharactersService
-) : BaseDataSource() {
+) {
 
-    suspend fun getCharacters(page: Int) = getResult { service.getCharacters(page) }
-    suspend fun getCharacter(id: Int) = getResult { service.getCharacter(id) }
+    suspend fun getCharacters(page: Int): CharactersListRemoteModel = service.getCharacters(page)
+    suspend fun getCharacter(id: Int) = service.getCharacter(id)
 }

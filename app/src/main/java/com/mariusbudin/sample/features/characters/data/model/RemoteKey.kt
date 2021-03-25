@@ -7,7 +7,7 @@ import com.mariusbudin.sample.features.characters.data.model.RemoteKey.Companion
 @Entity(tableName = TABLE_NAME)
 data class RemoteKey(
     @PrimaryKey
-    val _id: Int=0,
+    val keyId: Int = 0,
     val nextPageKey: String?
 ) {
     companion object {

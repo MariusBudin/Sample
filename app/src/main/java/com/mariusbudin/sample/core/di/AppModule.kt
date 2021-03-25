@@ -1,12 +1,12 @@
 package com.mariusbudin.sample.core.di
 
 import android.content.Context
+import androidx.paging.ExperimentalPagingApi
 import com.mariusbudin.sample.BuildConfig
 import com.mariusbudin.sample.core.data.local.AppDatabase
-import com.mariusbudin.sample.features.characters.data.local.CharacterDao
+import com.mariusbudin.sample.features.characters.data.CharactersRepository
 import com.mariusbudin.sample.features.characters.data.remote.CharactersRemoteDataSource
 import com.mariusbudin.sample.features.characters.data.remote.CharactersService
-import com.mariusbudin.sample.features.characters.data.CharactersRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,6 +18,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
+@ExperimentalPagingApi
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -36,7 +37,7 @@ object AppModule {
         val okHttpClientBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
         if (BuildConfig.DEBUG) {
             val loggingInterceptor =
-                HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)
+                HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
             okHttpClientBuilder.addInterceptor(loggingInterceptor)
         }
         return okHttpClientBuilder.build()

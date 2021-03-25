@@ -12,6 +12,7 @@ import com.mariusbudin.sample.features.characters.data.local.CharacterDao
 import com.mariusbudin.sample.features.characters.data.local.RemoteKeyDao
 import com.mariusbudin.sample.features.characters.data.model.Character
 import com.mariusbudin.sample.features.characters.data.model.RemoteKey
+import com.mariusbudin.sample.features.characters.data.model.remote.CharactersListRemoteModel
 import com.mariusbudin.sample.features.characters.data.remote.CharactersRemoteDataSource
 import retrofit2.HttpException
 import java.io.IOException
@@ -57,25 +58,22 @@ class PageKeyedRemoteMediator(
                     remoteKey.nextPageKey
                 }
             }
+            val data: CharactersListRemoteModel =
+                remoteDataSource.getCharacters(page = loadKey.getPageFromKey() ?: 1)
+            val items: List<Character> = data.results.map { Character.mapFromRemoteModel(it) }
+            val next: String? = data.info.next
 
-            loadKey.getPageFromKey()?.let { page ->
-                val data = remoteDataSource.getCharacters(page = page).data
-
-                val nextPage = data.info.next
-                val characters =
-                    data.results.map { characters -> Character.mapFromRemoteModel(characters) }
-
-                db.withTransaction {
-                    if (loadType == REFRESH) {
-                        if (characters.isNotEmpty()) characterDao.deleteAll()
-                        remoteKeyDao.deleteKey()
-                    }
-
-                    remoteKeyDao.insert(RemoteKey(nextPageKey = loadKey))
-                    if (characters.isNotEmpty()) characterDao.insertAll(characters)
+            db.withTransaction {
+                if (loadType == REFRESH) {
+                    characterDao.deleteAll()
+                    remoteKeyDao.deleteKey()
                 }
+
+                remoteKeyDao.insert(RemoteKey(nextPageKey = next))
+                characterDao.insertAll(items)
             }
-            return MediatorResult.Success(endOfPaginationReached = loadKey == null)
+
+            return MediatorResult.Success(endOfPaginationReached = items.isEmpty())
         } catch (e: IOException) {
             return MediatorResult.Error(e)
         } catch (e: HttpException) {
@@ -87,8 +85,6 @@ class PageKeyedRemoteMediator(
 
         //quick and dirty workaround for getting an int from the next page indicator.
         //TODO replace this for a production app
-        const val PAGE_KEY = "https://rickandmortyapi.com/api/character/?page="
-
-        fun String?.getPageFromKey() = this?.removePrefix(PAGE_KEY)?.toIntOrNull()
+        fun String?.getPageFromKey() = this?.removeRange(0, indexOf("page=") + 5)?.toIntOrNull()
     }
 }
