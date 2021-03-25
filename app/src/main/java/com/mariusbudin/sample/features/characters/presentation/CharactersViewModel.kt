@@ -2,6 +2,7 @@ package com.mariusbudin.sample.features.characters.presentation
 
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.distinctUntilChanged
 import androidx.paging.ExperimentalPagingApi
 import com.mariusbudin.sample.features.characters.data.CharactersRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
